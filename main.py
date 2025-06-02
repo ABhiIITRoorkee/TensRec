@@ -386,78 +386,6 @@ class Model_Wrapper(object):
         txt.write(final_perf + "\n")
         print(final_perf)
 
-    # def bpr_loss(self, users, pos_items, neg_items):
-    #     pos_scores = torch.sum(torch.mul(users, pos_items), dim=1)  # torch.mul():对应元素相乘
-    #     neg_scores = torch.sum(torch.mul(users, neg_items), dim=1)  # torch.mul():对应元素相乘
-
-    #     regularizer = 1. / 2 * (users ** 2).sum() + 1. / 2 * (pos_items ** 2).sum() + 1. / 2 * (neg_items ** 2).sum()
-    #     regularizer = regularizer / self.batch_size
-
-    #     maxi = F.logsigmoid(pos_scores - neg_scores)
-    #     mf_loss = -torch.mean(maxi)
-
-    #     emb_loss = self.decay * regularizer
-    #     reg_loss = 0.0
-    #     return mf_loss, emb_loss, reg_loss
-
-
-    # def parewise_hinge_loss(self, users, pos_items, neg_items, epoch, margin=1.5):
-    #     """
-    #     Pairwise Hinge loss implementation for ranking.
-        
-    #     Args:
-    #     - users: User embeddings.
-    #     - pos_items: Positive item embeddings (for positive interactions).
-    #     - neg_items: Negative item embeddings (for negative interactions).
-    #     - epoch: Current epoch number.
-    #     - margin: The margin for hinge loss (default is 1.0).
-        
-    #     Returns:
-    #     - mf_loss: Margin-based ranking loss.
-    #     - emb_loss: Regularization loss for embeddings.
-    #     - reg_loss: Weight regularization term.
-    #     """
-        
-    #     # Compute positive and negative scores using dot products (or element-wise multiplication)
-    #     pos_scores = torch.sum(users * pos_items, dim=1)  # Positive interaction scores
-    #     neg_scores = torch.sum(users * neg_items, dim=1)  # Negative interaction scores
-
-    #     # Hinge loss formula: max(0, margin - (positive_score - negative_score))
-    #     hinge_losses = torch.clamp(margin - (pos_scores - neg_scores), min=0)
-
-    #     # Mean hinge loss
-    #     mf_loss = torch.mean(hinge_losses)
-
-    #     # Embedding regularization term (to prevent overfitting)
-    #     regularizer = 1. / 2 * (users ** 2).sum() + 1. / 2 * (pos_items ** 2).sum() + 1. / 2 * (neg_items ** 2).sum()
-    #     emb_loss = self.decay * regularizer / self.batch_size
-
-    #     # L2 regularization (weight decay)
-    #     reg_loss = self.weight_decay * (self.model.user_embedding.weight.norm(2) ** 2 + self.model.item_embedding.weight.norm(2) ** 2)
-        
-    #     return mf_loss, emb_loss, reg_loss
-
-    # def parewise_hinge_loss(self, users, pos_items, neg_items):
-    #     """
-    #         Bayesian Personalized Ranking (BPR) loss for ranking.
-    #     """
-    #     # Compute positive and negative scores
-    #     pos_scores = torch.sum(users * pos_items, dim=1)  # Positive interaction scores
-    #     neg_scores = torch.sum(users * neg_items, dim=1)  # Negative interaction scores
-        
-    #     # BPR loss: log-sigmoid of the difference between positive and negative scores
-    #     bpr_loss = -torch.mean(torch.log(torch.sigmoid(pos_scores - neg_scores) + 1e-8))
-        
-    #     # Regularization
-    #     regularizer = 1. / 2 * (users ** 2).sum() + 1. / 2 * (pos_items ** 2).sum() + 1. / 2 * (neg_items ** 2).sum()
-    #     emb_loss = self.decay * regularizer / self.batch_size
-        
-    #     # L2 regularization (weight decay)
-    #     reg_loss = self.weight_decay * (self.model.user_embedding.weight.norm(2) ** 2 + self.model.item_embedding.weight.norm(2) ** 2)
-        
-    #     return bpr_loss, emb_loss, reg_loss
-    #    #Best Iter=[260]@[297.1] recall=[0.30722 0.40512 0.51530], precision=[0.28527    0.19338 0.12690], hit=[0.815990.88671 0.93671], ndcg=[0.65460 0.659370.64665], map=[0.58351   0.54691 0.48979],mrr=[0.62000   0.62987 0.63336], f1=[0.27862   0.24596 0.19260]
-
     def parewise_hinge_loss(self, users, pos_items, neg_items, margin=1.0):
         """
         Max-Margin Ranking Loss for ranking.
@@ -477,7 +405,6 @@ class Model_Wrapper(object):
         reg_loss = self.weight_decay * (self.model.user_embedding.weight.norm(2) ** 2 + self.model.item_embedding.weight.norm(2) ** 2)
         
         return max_margin_loss, emb_loss, reg_loss
-    #Best Iter=[116]@[198.5] recall=[0.31041 0.41641 0.52149], precision=[0.28833    0.19827 0.12818], hit=[0.81509  0.88784 0.93964], ndcg=[0.65464 0.658000.64804], map=[0.58398   0.54316 0.49095],mrr=[0.61858   0.62851 0.63216], f1=[0.28170   0.25239 0.19454]
     
     def parewisde_hinge_loss(self, users, pos_items, neg_items, temperature=0.5):
         # Compute scores
