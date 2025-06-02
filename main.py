@@ -57,8 +57,8 @@ class Model_Wrapper(object):
 
         print('----self.alg_type is {}----'.format(self.alg_type))
 
-        if self.alg_type in ['HyRec']:
-            self.model = HyRec(self.n_users, self.n_items, self.emb_dim, self.layer_num, self.mess_dropout, 300)
+        if self.alg_type in ['TensRec']:
+            self.model = TensRec(self.n_users, self.n_items, self.emb_dim, self.layer_num, self.mess_dropout, 300)
         else:
             raise Exception('Dont know which model to train')
 
