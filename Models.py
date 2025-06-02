@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 
-class HyRec(nn.Module):
+class TensRec(nn.Module):
     def __init__(self, n_users, n_items, embedding_dim, layer_num, dropout_list, rank):
         super().__init__()
         self.n_users = n_users
